@@ -12,7 +12,16 @@ const accountCollection = database.collection("account");
 //check account list;  router: api/account/list
 
 router.get("/list", (req, res) => {
-  res.send("test")
+   const client = new MongoClient(uri);
+   async function run() {
+     try {
+       const result = await accountCollection.find({}).toArray();;
+       res.send(result);
+     } finally {
+       await client.close();
+     }
+   }
+   run().catch(console.dir);
 });
 
 //add items in account;  router: api/account/add
@@ -23,7 +32,6 @@ router.post("/add", (req, res) => {
       const result = await accountCollection.insertOne( req.body );
       res.send(result)
     } finally {
-      // Ensures that the client will close when you finish/error
       await client.close();
     }
   }
