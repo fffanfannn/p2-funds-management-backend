@@ -9,10 +9,7 @@ const client = new MongoClient(uri);
 const database = client.db("mongodemo");
 const student = database.collection("student");
 
-//get users json api;  router: api/user/register
-router.get("/", (req, res) => {
-    res.json({ msg: "users.js works"});
-});
+//get user register api;  router: api/user/register
 
 router.post("/register", (req, res) => {
     const client = new MongoClient(uri);
@@ -34,6 +31,7 @@ router.post("/register", (req, res) => {
      run().catch(console.dir);
 });
 
+//get user register login;  router: api/user/login
 router.post("/login", (req, res) => {
   const client = new MongoClient(uri);
   async function run() {
