@@ -34,4 +34,28 @@ router.post("/register", (req, res) => {
      run().catch(console.dir);
 });
 
+router.post("/login", (req, res) => {
+  const client = new MongoClient(uri);
+  async function run() {
+      try {
+      const name = req.body.name;
+      const age = req.body.age;
+      const userExist = await student.findOne({ name: name });
+      if (!userExist) {
+        return res.status(400).json({ name: "User doesn't exist" });
+      } else {
+          if (userExist.age !== age) { 
+            return res.status(400).json({ age: "Age doesn't match" });
+          } else { 
+              res.json({msg: "Login success"})
+          }
+      }
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
+  }
+  run().catch(console.dir);
+});
+
 module.exports = router;
