@@ -20,7 +20,7 @@ const student = database.collection("student");
 
 //users api
 const userRouter = require("./routes/api/users");
-app.use("/api", userRouter);
+app.use("/api/user", userRouter);
 
 app.get("/", (req, res) => {
   async function run() {
