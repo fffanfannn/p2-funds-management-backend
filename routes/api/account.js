@@ -64,4 +64,24 @@ router.get("/:id", (req, res) => {
    run().catch(console.dir);
 });
 
+//delete account item with id;  router: api/account/:id
+router.delete("/:id", (req, res) => {
+  const client = new MongoClient(uri);
+  async function run() {
+    try {
+      const result = await accountCollection.deleteOne({
+        _id: new ObjectId(req.params.id),
+      });
+      if (!result) {
+        return res.status(400).json({ msg: "No item deleted" });
+      } else {
+        res.json(result);
+      }
+    } finally {
+      await client.close();
+    }
+  }
+  run().catch(console.dir);
+});
+
 module.exports = router;
