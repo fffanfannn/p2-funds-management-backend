@@ -72,11 +72,32 @@ router.delete("/:id", (req, res) => {
       const result = await accountCollection.deleteOne({
         _id: new ObjectId(req.params.id),
       });
-      if (!result) {
+      if (result.deletedCount == 0) {
         return res.status(400).json({ msg: "No item deleted" });
       } else {
         res.json(result);
       }
+    } finally {
+      await client.close();
+    }
+  }
+  run().catch(console.dir);
+});
+
+//edit items in account by id;  router: api/account/edit:id
+router.patch("/edit/:id", (req, res) => {
+  const client = new MongoClient(uri);
+  async function run() {
+      try {
+        const result = await accountCollection.updateOne(
+          { _id: new ObjectId(req.params.id) },
+          { $set: (req.body) }
+        );
+       if (result.modifiedCount == 0) {
+         return res.status(400).json({ msg: "No item modified" });
+       } else {
+         res.json(result);
+       }
     } finally {
       await client.close();
     }
