@@ -17,6 +17,7 @@ router.post("/register", (req, res) => {
        try {
            const userExist = await student.findOne({ name: req.body.name });
            if (userExist) {
+             console.log("userExist", userExist)
              return res.status(400).json({ name: "User already exists" });
            } else {
              const result = await student.insertOne(req.body);
