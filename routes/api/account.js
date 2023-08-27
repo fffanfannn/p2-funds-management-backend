@@ -42,7 +42,7 @@ router.post("/add", (req, res) => {
   run().catch(console.dir);
 });
 
-//check account item with id;  router: api/account/:id
+//check account item by id;  router: api/account/:id
 
 router.get("/:id", (req, res) => {
    const client = new MongoClient(uri);
@@ -64,8 +64,9 @@ router.get("/:id", (req, res) => {
    run().catch(console.dir);
 });
 
-//delete account item with id;  router: api/account/:id
-router.delete("/:id", (req, res) => {
+//delete account item by id;  router: api/account/delete/:id
+
+router.delete("/delete/:id", (req, res) => {
   const client = new MongoClient(uri);
   async function run() {
     try {
@@ -84,7 +85,8 @@ router.delete("/:id", (req, res) => {
   run().catch(console.dir);
 });
 
-//edit items in account by id;  router: api/account/edit:id
+//edit item in account by id;  router: api/account/edit/:id
+
 router.patch("/edit/:id", (req, res) => {
   const client = new MongoClient(uri);
   async function run() {
