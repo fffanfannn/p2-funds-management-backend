@@ -19,9 +19,9 @@ const database = client.db("mongodemo");
 const student = database.collection("student");
 
 //users api
-const userRouter = require("./routes/api/users");
+const userRouter = require("./routes/api/users.js");
 app.use("/api/user", userRouter);
-const accountRouter = require("./routes/api/account");
+const accountRouter = require("./routes/api/account.js");
 app.use("/api/account", accountRouter);
 
 app.get("/", (req, res) => {
