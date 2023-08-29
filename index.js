@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3001;
 
 //cors
 const cors = require("cors");
@@ -25,6 +25,7 @@ const accountRouter = require("./routes/api/account.js");
 app.use("/api/account", accountRouter);
 
 app.get("/", (req, res) => {
+  const client = new MongoClient(uri);
   async function run() {
     try {
       const result = await student.find({}).toArray();
