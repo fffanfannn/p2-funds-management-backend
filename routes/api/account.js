@@ -87,7 +87,7 @@ router.delete("/delete/:id", (req, res) => {
 
 //edit item in account by id;  router: api/account/edit/:id
 
-router.patch("/edit/:id", (req, res) => {
+router.post("/edit/:id", (req, res) => {
   const client = new MongoClient(uri);
   async function run() {
       try {
