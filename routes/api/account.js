@@ -64,6 +64,28 @@ router.get("/:id", (req, res) => {
    run().catch(console.dir);
 });
 
+//check account items by userid;  router: api/account/user/:id
+
+router.get("/user/:id", (req, res) => {
+  const client = new MongoClient(uri);
+  async function run() {
+    try {
+      const result = await accountCollection.find({
+        userid: req.params.id
+      }).toArray();
+      if (!result) {
+        return res.status(400).json({ msg: "No item found" });
+      } else { 
+        res.json(result);
+      }
+     
+    } finally {
+      await client.close();
+    }
+  }
+  run().catch(console.dir);
+});
+
 //delete account item by id;  router: api/account/delete/:id
 
 router.delete("/delete/:id", (req, res) => {
