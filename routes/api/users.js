@@ -7,7 +7,7 @@ const uri =
   "mongodb+srv://2295467:ZhQhH6EHy24jWLMa@cluster0.zvckhsd.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri);
 const database = client.db("mongodemo");
-const student = database.collection("student");
+const users = database.collection("users");
 
 //get user register api;  router: api/user/register
 
@@ -15,12 +15,12 @@ router.post("/register", (req, res) => {
     const client = new MongoClient(uri);
      async function run() {
        try {
-           const userExist = await student.findOne({ name: req.body.name });
-           if (userExist) {
-             console.log("userExist", userExist)
-             return res.status(400).json({ name: "User already exists" });
+           const resultName = await users.findOne({ name: req.body.name });
+           const resultEmail = await users.findOne({ email: req.body.email });
+           if (resultName || resultEmail || (resultName && resultEmail)) {
+             return res.status(400).send({ RegisterNote: "Username or email already exists" });
            } else {
-             const result = await student.insertOne(req.body);
+             const result = await users.insertOne(req.body);
              console.log(result);
              res.send(result);
            }
@@ -38,15 +38,15 @@ router.post("/login", (req, res) => {
   async function run() {
       try {
       const name = req.body.name;
-      const age = req.body.age;
-      const userExist = await student.findOne({ name: name });
+      const password = req.body.password;
+      const userExist = await users.findOne({ name: name });
       if (!userExist) {
-        return res.status(400).json({ name: "User doesn't exist" });
+        return res.status(400).json({ errMsg: "User not exist" });
       } else {
-          if (userExist.age !== age) { 
-            return res.status(400).json({ age: "Age doesn't match" });
+          if (userExist.password !== password) { 
+            return res.status(400).json({ errMsg: "Password not match" });
           } else { 
-              res.json({msg: "Login success"})
+              res.json(userExist);
           }
       }
     } finally {
