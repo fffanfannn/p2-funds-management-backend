@@ -73,7 +73,7 @@ router.get("/user/:id", (req, res) => {
       const result = await accountCollection.find({
         userid: req.params.id
       }).toArray();
-      if (!result) {
+      if (result.length == 0) {
         return res.status(400).json({ msg: "No item found" });
       } else { 
         res.json(result);
