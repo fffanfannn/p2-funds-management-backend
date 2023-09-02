@@ -57,4 +57,23 @@ router.post("/login", (req, res) => {
   run().catch(console.dir);
 });
 
+//get users list;  router: api/user/list
+
+router.get("/list", (req, res) => {
+  const client = new MongoClient(uri);
+  async function run() {
+    try {
+      const result = await users.find({}).toArray();
+      if (result.length == 0) { 
+         return res.status(400).json({ msg: "No list found" });
+      } else {
+         res.json(result);
+      }
+    } finally {
+      await client.close();
+    }
+  }
+  run().catch(console.dir);
+});
+
 module.exports = router;
