@@ -76,4 +76,47 @@ router.get("/list", (req, res) => {
   run().catch(console.dir);
 });
 
+//post user tags by id api;  router: api/user/tags/:id
+
+router.post("/tags/:id", (req, res) => {
+  const client = new MongoClient(uri);
+   async function run() {
+     try {
+      const result = await users.updateOne(
+        { _id: new ObjectId(req.params.id) },
+        { $set: (req.body) }
+      );
+     if (result.modifiedCount == 0) {
+       return res.status(400).json({ msg: "No item modified" });
+     } else {
+       res.json(result);
+     }
+  } finally {
+    await client.close();
+  }
+   }
+   run().catch(console.dir);
+});
+
+//get user tags by id api;  router: api/user/tags/:id
+
+router.get("/tags/:id", (req, res) => {
+  const client = new MongoClient(uri);
+   async function run() {
+     try {
+      const result = await users.find(
+        { _id: new ObjectId(req.params.id) },
+      ).toArray();
+     if (result.modifiedCount == 0) {
+       return res.status(400).json({ msg: "No item modified" });
+     } else {
+       res.json(result);
+     }
+  } finally {
+    await client.close();
+  }
+   }
+   run().catch(console.dir);
+});
+
 module.exports = router;
