@@ -20,19 +20,19 @@ passport.use(
       passwordField: "password",
     },
     async function (name, password, done) {
-      console.log('a');
-      const user = await users.findOne({ name: name });
-      console.log('aaaaaa', user);
-      if (!user) {
-        return done(null, false, { message: "Invalid username..." });
-      }
+    console.log('a');
+    const user = await users.findOne({ name: name });
+    console.log('aaaaaa', user);
+    if (!user) {
+      return done(null, false, { message: "Invalid username..." });
+    }
 
-      if (user.password !== password) {
-        return done(null, false, { message: "Incorrect password..." });
-      }
+    if (user.password !== password) {
+      return done(null, false, { message: "Incorrect password..." });
+    }
 
-      return done(null, user);
-    })
+    return done(null, user);
+  })
 );
 
 passport.serializeUser(function (user, done) {
@@ -73,8 +73,11 @@ router.post("/register", (req, res) => {
 });
 
 //get user register login;  router: api/user/login
-
+let isLogin;
+console.log('3', isLogin)
 router.post("/login", (req, res, next) => {
+  isLogin = req.isAuthenticated();
+  console.log('1', isLogin)
   console.log("Received request:", req.body);
   passport.authenticate("local", (err, user, info) => {
     console.log("Error:", err);
@@ -91,11 +94,13 @@ router.post("/login", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      console.log('/login: req.isAuthenticated()', req.isAuthenticated())
+      console.log('/login: req.isAuthenticated()',req.isAuthenticated())
+      isLogin = req.isAuthenticated();
+      console.log('2', isLogin)
       return res.json(user);
     });
   })(req, res, next);
-
+ 
 });
 
 // router.post("/login", (req, res) => {
@@ -133,29 +138,35 @@ router.get("/logout", (req, res, next) => {
     // Redirect or respond as needed after logout
     res.redirect("/"); // You can redirect to a different page if needed
   });
-  console.log('/logout: req.isAuthenticated()', req.isAuthenticated())
+  isLogin = req.isAuthenticated();
+  console.log('5', isLogin)
 });
 
 //get users list;  router: api/user/list
 
 router.get("/list", (req, res) => {
-
-  const client = new MongoClient(uri);
-  async function run() {
-    try {
-      const result = await users.find({}).toArray();
-      if (result.length == 0) {
-        return res.status(400).json({ msg: "No list found" });
-      } else {
-        res.json(result);
+  console.log('4', isLogin)
+  if (isLogin) {
+    const client = new MongoClient(uri);
+    async function run() {
+      try {
+        const result = await users.find({}).toArray();
+        if (result.length == 0) {
+          return res.status(400).json({ msg: "No list found" });
+        } else {
+          res.json(result);
+        }
+      } finally {
+        await client.close();
       }
-    } finally {
-      await client.close();
     }
+    run().catch(console.dir);
+  } else {
+    res.send ({msg: 'not authorized' })
   }
-  run().catch(console.dir);
-
-
+    
+  
+  
 });
 
 //post user tags by id api;  router: api/user/tags/:id
