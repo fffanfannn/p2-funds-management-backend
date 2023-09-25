@@ -1,14 +1,32 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3001;
+
+//parse application/json
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+
+var passport = require('passport');
+var session = require('express-session');
+var MongoStore = require('connect-mongo');
+
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({mongoUrl:'mongodb+srv://2295467:ZhQhH6EHy24jWLMa@cluster0.zvckhsd.mongodb.net/?retryWrites=true&w=majority',collectionName:"sessions"}),
+  cookie: {maxAge: 1000*60}
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(passport.authenticate('session'));
+
 
 //cors
 const cors = require("cors");
 app.use(cors());
 
-//parse application/json
-const bodyParser = require("body-parser");
-app.use(bodyParser.json());
 
 //db connection
 const { MongoClient } = require("mongodb");
